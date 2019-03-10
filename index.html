@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Fake Tab Generator</title>
+  <meta name="description" content="Fake tab Generator">
+  <link rel="icon" type="image/x-icon" href="/icons/4chan.ico">
+</head>
+<body>
+<div id="terrainMask" class="tabcontent" style="width: 50%;margin: 25%;margin-top: 5%">
+  <fieldset>
+   <legend>Fake Tab Generator</legend>
+    Title: <input id="texttitleinput" rows="1" cols="24" ></input><br />
+    Favicon:<br />
+   <input type="radio" name="favicon" value="icons/4chan.ico" />4chan<br />
+   <input type="radio" name="favicon" value="icons/4chan-ws.ico" />4chan Work Safe<br />
+   <input type="radio" name="favicon" value="icons/google.png" />Google<br />
+   <input type="radio" name="favicon" value="icons/pornhub.png" />PornHub<br />
+   <input type="radio" name="favicon" value="icons/e-hentai.ico" />E-Hentai<br />
+   <input type="radio" name="favicon" value="icons/quillette.jpg" />Quillette<br />
+   <input type="radio" name="favicon" value="icons/medium.png" />Medium<br />
+
+  </fieldset>
+  <button id='btn_go' onclick="change(event)">Go!</button>
+
+</div>
+</body>
+<script>
+
+
+function getId(str){ //jquer broke everything so lol here we go.
+  return document.getElementById(str);
+}
+
+function getName(str){ //jquer broke everything so lol here we go.
+  return document.getElementsByName(str);
+}
+
+function change(event){
+  var newtitle = getId("texttitleinput").value
+  document.title=newtitle
+  for (var i = getName("favicon").length - 1; i >= 0; i--) {
+    if(getName("favicon")[i].checked== true){
+      setFavicon(getName("favicon")[i].value)
+    }
+  };
+
+}
+
+document.head = document.head || document.getElementsByTagName('head')[0];
+
+function setFavicon(url)
+{
+    removeFavicon();
+    var link=document.createElement('link');
+    link.type='image/x-icon';
+    link.rel='icon';
+    link.href=url;
+    document.getElementsByTagName('head')[0].appendChild(link);
+    if (window.console) console.log("Set FavIcon URL to " + getFavicon().href);
+ }
+
+
+function removeFavicon()
+{
+    var links=document.getElementsByTagName('link');
+    var head=document.getElementsByTagName('head')[0];
+    for(var i=0; i<links.length; i++)
+    {
+        if(links[i].getAttribute('rel')==='icon')
+        {
+            head.removeChild(links[i])
+        }         
+    }
+}
+
+function getFavicon()
+{
+    var links=document.getElementsByTagName('link');
+    for(var i=0; i<links.length; i++)
+    {
+        if (links[i].getAttribute('rel')==='icon')
+        {
+            return links[i];
+        }       
+    }
+    return undefined;
+}
+</script>
+</html>

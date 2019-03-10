@@ -1,0 +1,167 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Dom5 Modding Itemslots calculator</title>
+  <meta name="description" content="Itemslots calculator">
+  <meta name="author" content="SitePoint">
+</head>
+<body>
+	<h1>Dominions Itemslots Calculator</h1>
+By <a href="https://legendsmith.net">Legendsmith</a><p> &amp; Marjanaama</p>
+<div class="tab">
+  <button class="tablinks active" onclick="openTab(event, 'itemSlot')">Itemslots</button>
+  <button class="tablinks" onclick="openTab(event, 'magicPath')">Magic Paths</button>
+  <button class="tablinks" onclick="openTab(event, 'terrainMask')">Terrain Masks for Magic Sites</button>
+</div>
+<div id="itemSlot" class="tabcontent">
+ <fieldset>
+       <legend>Hands</legend>
+    	<input type="radio" name="hands" value="0" />no hands<br />
+        <input type="radio" name="hands" value="2" />1 hand<br />
+        <input type="radio" name="hands" value="6" />2 hands<br />
+        <input type="radio" name="hands" value="14" />3 hands<br />
+        <input type="radio" name="hands" value="30" />4 hands<br />
+ </fieldset>
+ <fieldset>
+   <legend>Head</legend>
+   <input type="radio" name="head" value="0" />No head slot<br />
+   <input type="radio" name="head" value="128" />1 head<br />
+   <input type="radio" name="head" value="384" />2 heads<br />
+ </fieldset>
+   <input type="checkbox" id="crown" value="262144" />Head slots can only have crowns<br />
+   <input type="checkbox" id="body" value="1024" />Body slot<br />
+   <input type="checkbox" id="feet" value="2048" />Feet slot<br />
+<fieldset>
+   <legend>Misc</legend>
+   <input type="radio" name="misc" value="0" />None<br />
+   <input type="radio" name="misc" value="4096" />1 misc<br />
+   <input type="radio" name="misc" value="12288" />2 misc<br />
+   <input type="radio" name="misc" value="28672" />3 misc<br />
+   <input type="radio" name="misc" value="61440" />4 misc<br />
+ </fieldset>
+<textarea id="output" rows="1" cols="24" readonly></textarea>
+</div>
+<div id="magicPath" class="tabcontent" style="display: none">
+  <fieldset>
+   <legend>Paths</legend>
+   <input type="checkbox" id="magic0" value="128" />Fire<br />
+   <input type="checkbox" id="magic1" value="256" />Air<br />
+   <input type="checkbox" id="magic2" value="512" />Water<br />
+   <input type="checkbox" id="magic3" value="1024" />Earth<br />
+   <input type="checkbox" id="magic4" value="2048" />Astral<br />
+   <input type="checkbox" id="magic5" value="4096" />Death<br />
+   <input type="checkbox" id="magic6" value="8192" />Nature<br />
+   <input type="checkbox" id="magic7" value="16384" />Blood<br />
+   <input type="checkbox" id="magic8" value="32768" />Priest<br />
+  </fieldset>
+  <textarea id="outputMagic" rows="1" cols="24" readonly></textarea>
+</div>
+<div id="terrainMask" class="tabcontent" style="display: none">
+  <fieldset>
+   <legend>Terrain</legend>
+   <input type="checkbox" id="terrain0" value="1" />Plain<br />
+   <input type="checkbox" id="terrain1" value="2" />Forest<br />
+   <input type="checkbox" id="terrain2" value="4" />Mountain<br />
+   <input type="checkbox" id="terrain3" value="8" />Waste<br />
+   <input type="checkbox" id="terrain4" value="16" />Farm<br />
+   <input type="checkbox" id="terrain5" value="32" />Sea<br />
+   <input type="checkbox" id="terrain6" value="64" />Coast<br />
+   <input type="checkbox" id="terrain7" value="128" />Swamp<br />
+   <input type="checkbox" id="terrain8" value="256" />Deep Sea<br />
+   <input type="checkbox" id="terrain9" value="512" />Cave<br />
+   <input type="checkbox" id="terrain10" value="16384" />Unique<br />
+  </fieldset>
+  <textarea id="outputTerrain" rows="1" cols="24" readonly></textarea>
+</div>
+</body>
+<script>
+"use strict";
+
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+function getId(str){ //jquer broke everything so lol here we go.
+  return document.getElementById(str);
+}
+function getName(str){ //jquer broke everything so lol here we go.
+  return document.getElementsByName(str);
+}
+var output = getId("output");
+var outputMagic = getId("outputMagic");
+var outputTerrain = getId("outputTerrain");
+var binaryArray = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
+
+
+itemSlot.onclick=function doitItem(){
+var nHand = 0;
+var nHead = 0;
+var nMisc = 0;
+var total = 0;
+
+for (var i = getName("hands").length - 1; i >= 0; i--) {
+	if(getName("hands")[i].checked== true){
+		nHand= parseInt(getName("hands")[i].value);
+	}
+};
+for (var i = getName("head").length - 1; i >= 0; i--) {
+	if(getName("head")[i].checked== true){
+		nHead= parseInt(getName("head")[i].value);
+	}
+};
+for (var i = getName("misc").length - 1; i >= 0; i--) {
+	if(getName("misc")[i].checked== true){
+		nMisc= parseInt(getName("misc")[i].value);
+	}
+};
+if (getId("crown").checked==true){
+	total += 262144;
+}
+if (getId("feet").checked==true){
+	total += 2048;
+}
+if (getId("body").checked==true){
+	total += 1024;
+}
+
+output.textContent = total + nHand +nHead+nMisc
+}
+itemSlot.onclick();
+
+magicPath.onclick=function doitMagic(){
+var nMagic = 0;
+for (var i = 8; i >= 0; i--){
+	if (getId("magic" + i).checked==true){
+		nMagic += (binaryArray[i] * 128);
+	}
+}
+outputMagic.textContent = nMagic;
+}
+magicPath.onclick();
+
+terrainMask.onclick=function doitTerrain(){
+var nTerrain = 0;
+for (var i = 10; i >= 0; i--){
+	if (getId("terrain" + i).checked==true){
+		if (i !== 10)
+			nTerrain += (binaryArray[i]);
+		else
+			nTerrain += 16384;
+	}
+}
+outputTerrain.textContent = nTerrain;
+}
+terrainMask.onclick();
+</script>
+</html>
